@@ -52,6 +52,23 @@ def D2HistFiller(input): #maked root 2d histogram out of 2d numpy array
             hist.SetBinContent(i+1, k+1, val)
     return hist
 
+
+def flatten2d(hist2d):
+    bins = (hist2d.GetNbinsX()) * (hist2d.GetNbinsY())
+    print "using number of bins: ", bins
+    #bins = hist2d.GetNcells()
+    repeater = hist2d.GetNbinsX()
+    hist = histmaker("flt"+hist2d.GetTitle(), "Flattened "+hist2d.GetTitle(), bins, 0, bins,  hist2d.GetYaxis().GetTitle()+" bin", "events", ROOT.kRed+2, 1, 2)
+    N=0
+    for k in range(0, hist2d.GetNbinsX()+1):    
+        for i in range(0, hist2d.GetNbinsY()+1):
+            if i==0: continue
+            b = (i*12+k)+1
+            hist.Fill(N, hist2d.GetBinContent(b))
+            N+=1
+    return hist
+
+
 def flatten_m_matrix(m_matrix):
     from itertools import product
     shape = m_matrix.shape
